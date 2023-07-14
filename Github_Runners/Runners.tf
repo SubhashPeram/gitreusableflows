@@ -2,16 +2,24 @@ data "aws_availability_zones" "all_azs" {
   state = "available"
 }
 
+data "aws_ami" "amazon-linux" {
+  most_recent = true
+  owners      = ["amazon"]
 
+  filter {
+    name   = "name"
+    values = ["amzn-ami-hvm-*-x86_64-ebs"]
+  }
+}
+
+/*
 resource "aws_launch_template" "ec2_launch_template" {
   name        = "github_runner_launch_template"
   description = "Launch Template for GitHub Runners EC2 AutoScaling Group"
 
-  image_id      = var.ami
+  image_id      = data.aws_ami.amazon-linux.id
   instance_type = var.instance_type
   key_name      = var.key_name
-
-  user_data = base64encode(templatefile("${path.cwd}/bootstrap.tmpl", { github_repo_url = var.github_repo_url, github_repo_pat_token = var.github_repo_pat_token, runner_name = var.runner_name, labels = join(",", var.labels) }))
 
   tags = {
     Name = "github_runner"
@@ -31,3 +39,5 @@ resource "aws_autoscaling_group" "github_runners_autoscaling_group" {
     version = "$Latest"
   }
 }
+
+*/
